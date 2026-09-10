@@ -1,0 +1,464 @@
+{
+  "name": "volunteerAI bot",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "__CUSTOM_API_CALL__",
+        "requestOptions": {}
+      },
+      "name": "Summarize Project with OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1392,
+        -48
+      ],
+      "id": "88340276-d36b-4c03-8d6b-efef43c50672",
+      "credentials": {
+        "openAiApi": {
+          "id": "1u2WND2zNfVyLQ9i",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "spreadsheet",
+        "title": "volunter",
+        "options": {}
+      },
+      "name": "Save to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        -32
+      ],
+      "id": "09990623-f936-403c-ac74-bf671c2696ab",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JGx4VvlNDNKFhCIv",
+          "name": "volunteer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "@volunteerai",
+        "text": "=📢 New AI Volunteer Project\n\n{{$json[\"title\"]}}\n\n{{$node[\"Summarize Project with OpenAI\"].json[\"choices\"][0][\"message\"][\"content\"]}}\n\n🔗 {{$json[\"link\"]}}\n\n_Source: {{$json[\"source\"]}}_",
+        "additionalFields": {}
+      },
+      "name": "Send Telegram Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1744,
+        -112
+      ],
+      "id": "5bab536a-23ab-435c-b70d-72046f95a79d",
+      "webhookId": "d2f1f9dd-d208-4b5f-a41c-7ce364389522",
+      "credentials": {
+        "telegramApi": {
+          "id": "nzzhepAnsEXeybTR",
+          "name": "myAIjob_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "@volunteerai",
+        "text": "🤖👋 *Welcome to VolunteerAI Bot!*\n\n🌍 Improve the world using your knowledge in AI.  \n📬 New AI volunteer projects every 6 hours.  \n🔔 Stay tuned and get involved!\n",
+        "additionalFields": {}
+      },
+      "name": "Send Welcome Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1776,
+        176
+      ],
+      "id": "493f16a6-3cc7-4c9c-9ddf-b3ccbc23f100",
+      "webhookId": "4c4f04dc-7be2-44c3-b679-81f3a04d4cb4",
+      "credentials": {
+        "telegramApi": {
+          "id": "nzzhepAnsEXeybTR",
+          "name": "myAIjob_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -48
+      ],
+      "id": "c5cf27f5-b917-49fe-81c2-0c639a4d67ea"
+    },
+    {
+      "parameters": {
+        "url": "https://omdena.com/projects/",
+        "responseFormat": "string",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Get Omdena Projects",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        800,
+        -256
+      ],
+      "id": "398fe0a0-8f13-4ac2-a99c-7b37019555e9"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "source",
+              "value": "Omdena"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Omdena Source",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -256
+      ],
+      "id": "34a55e35-52fb-43c9-9d35-4ca2d5e06cc1"
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/repositories?q=volunteer+AI+in:description&sort=updated&order=desc",
+        "options": {}
+      },
+      "name": "Get GitHub Issues",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        800,
+        -48
+      ],
+      "id": "f741316b-f708-4e51-b1ee-8456e3ce3750"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "source",
+              "value": "GitHub"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set GitHub Source",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -48
+      ],
+      "id": "32330f44-5059-4cd0-a4bf-a92cf0129fee"
+    },
+    {
+      "parameters": {
+        "url": "https://www.datakind.org/volunteer/",
+        "responseFormat": "string",
+        "options": {
+          "useQueryString": false
+        }
+      },
+      "name": "Get DataKind Projects",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        800,
+        160
+      ],
+      "id": "0045a58e-d970-4a4d-94d6-f06d16ce1937"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "source",
+              "value": "DataKind"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set DataKind Source",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        160
+      ],
+      "id": "bb400e1d-31b1-4a40-9a3e-0ed1a797a4fb"
+    },
+    {
+      "parameters": {
+        "functionCode": "const omdena = [];\nconst github = [];\nconst datakind = [];\n\nfor (const item of items) {\n  const { source, title, link } = item.json;\n\n  if (source === \"Omdena\") omdena.push({ title, link, source });\n  else if (source === \"GitHub\") github.push({ title, link, source });\n  else if (source === \"DataKind\") datakind.push({ title, link, source });\n}\n\nconst all = [...omdena, ...github, ...datakind];\n\n// Eliminar duplicados por link\nconst unique = [];\nconst seen = new Set();\n\nfor (const project of all) {\n  if (!seen.has(project.link)) {\n    seen.add(project.link);\n    unique.push(project);\n  }\n}\n\nreturn unique.map(project => ({ json: project }));"
+      },
+      "name": "Parse & Merge Projects",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -48
+      ],
+      "id": "09da523a-eb6e-448b-b718-d77e5d5ab405"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "volunter",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Enviado ao Telegram": "={{ $json.ok }}"
+          },
+          "matchingColumns": [
+            "Enviado ao Telegram"
+          ],
+          "schema": [
+            {
+              "id": "Nome do Projeto",
+              "displayName": "Nome do Projeto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Enviado ao Telegram",
+              "displayName": "Enviado ao Telegram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1952,
+        -112
+      ],
+      "id": "77f94445-ca34-4858-91a6-c323470c32a4",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JGx4VvlNDNKFhCIv",
+          "name": "volunteer"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Summarize Project with OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Save to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Omdena Projects",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get GitHub Issues",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get DataKind Projects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Omdena Projects": {
+      "main": [
+        [
+          {
+            "node": "Set Omdena Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get GitHub Issues": {
+      "main": [
+        [
+          {
+            "node": "Set GitHub Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get DataKind Projects": {
+      "main": [
+        [
+          {
+            "node": "Set DataKind Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Omdena Source": {
+      "main": [
+        []
+      ]
+    },
+    "Set DataKind Source": {
+      "main": [
+        []
+      ]
+    },
+    "Set GitHub Source": {
+      "main": [
+        [
+          {
+            "node": "Parse & Merge Projects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Merge Projects": {
+      "main": [
+        [
+          {
+            "node": "Summarize Project with OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Message": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Welcome Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "05c3d8dd-e210-42ce-9b98-e77bae3c20ba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_N8N_INSTANCE_ID"
+  },
+  "id": "q6M32qG2Aeaw3IxT",
+  "tags": []
+}
